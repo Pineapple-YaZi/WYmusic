@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-cell-group inset >
-      <van-cell :title="row.name" center :label="row.song.artists[0].name + '  -  ' + row.name" >
+      <van-cell :title="name" center :label="authorName + '  -  ' + name" >
         <van-icon color="#333" size="25" name="play-circle-o" />
       </van-cell>
     </van-cell-group>
@@ -11,9 +11,16 @@
 <script>
 export default {
   props: {
-    row: {
-      type: Object,
+    name: {
+      type: String,
       required: true
+    },
+    authorName: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: Number
     }
   },
   data () {

@@ -22,3 +22,15 @@ export function getTags () {
     url: '/search/hot'
   })
 }
+
+/**
+ * 获取歌单详情
+ * @param {*} params { keywords, limit, offset }
+ * @returns promise
+ */
+export function musicList (params) {
+  return axios({
+    url: '/cloudsearch',
+    params
+  })
+}

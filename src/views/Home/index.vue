@@ -2,7 +2,7 @@
   <div>
     <div class="recommend">最新音乐</div>
 
-    <Recommend v-for="item in newSongs" :row="item" :key="item.id"></Recommend>
+    <Recommend v-for="item in newSongs" :name="item.name" :authorName="item.song.artists[0].name" :key="item.id"></Recommend>
   </div>
 </template>
 
