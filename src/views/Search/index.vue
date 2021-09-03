@@ -5,7 +5,9 @@
       shape="round"
       placeholder="请输入搜索关键词"
       @input="onInput"
+
     />
+
     <div class="hotSearch" v-if="!musicList.length">
       <p class="searchTit">热门搜索</p>
       <span v-for="(item, index) in hotTags"
@@ -21,8 +23,16 @@
         :key="item.id"
         :authorName="item.ar[0].name"
         ></MusicItem>
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+        </van-list>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -34,7 +44,10 @@ export default {
     return {
       value: '',
       hotTags: [],
-      musicList: []
+      musicList: [],
+      page: 1,
+      loading: true,
+      finished: false
     }
   },
 
@@ -62,8 +75,39 @@ export default {
       this.getMusicList()
     },
     onInput () {
+      if (this.id) {
+        clearTimeout(this.id)
+      }
+      this.page = 1
+
       if (this.value === '') {
         this.musicList = []
+        return
+      }
+      // 异步更新数据
+      this.id = setTimeout(async () => {
+        const res = await musicList({
+          keywords: this.value,
+          limit: 10
+        })
+        this.musicList = res.data.result.songs
+      }, 800)
+    },
+    async onLoad () {
+      this.page++
+
+      const res = await musicList({
+        keywords: this.value,
+        limit: 10,
+        offset: (this.page - 1) * 10
+      })
+      console.log(res)
+      if (res.data.result.songs) {
+        this.musicList.push(...res.data.result.songs)
+        this.loading = false
+      } else {
+        // 数据全部加载完成
+        this.finished = false
       }
     }
   },
@@ -76,7 +120,7 @@ export default {
 
 <style scoped lang=less>
 .searchPannel{
-  padding: 0 10px;
+  padding: 0 10px 50px;
   .searchTit{
     color: #999;
     font-size: 13px;
